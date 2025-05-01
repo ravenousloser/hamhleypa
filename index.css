@@ -1,0 +1,882 @@
+
+@font-face {
+    font-family: 'Gemini';
+    src: url('fonts/hamhleypa18VF.ttf') format('truetype');
+    font-weight: 1 400;
+    font-style: normal;
+  }
+
+  body {
+    font-family: 'Gemini', sans-serif;
+    text-align: center;
+    background-color: #121212;
+    color: #121212;
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+    overflow-x: hidden;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 2s ease-in-out, color 2s ease-in-out;
+
+    }
+
+    html, body {
+      scroll-behavior: smooth;
+    }
+
+     body, .hero-section {
+    background-color: #121212;
+    transition: background-color 0.6s ease;
+  }
+  
+    section:not(.hero-section) {
+      background-color: #121212;
+    }
+
+    section {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      scroll-snap-align: start;
+    }
+    body.quiet-mode .hero-section {
+      background-color: #d9d9d9 !important;
+    }
+    .glyph-section,
+.mini-type-tester-section {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+section + section {
+  margin-top: 0;
+}
+
+.bottomControls {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 490px;
+  z-index: 100;
+}
+
+.icon-container,
+.slider-container,
+.button-wrapper {
+  position: static; /* ✅ Not absolute */
+}
+
+.snap-container {
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  overflow-y: scroll;       /* Correct scrolling behavior */
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  scroll-snap-type: y mandatory;
+}
+
+.bottom-controls-section {
+  scroll-snap-align: none;
+  height: auto;
+}
+
+
+
+  .visually-hidden {
+position: absolute;
+width: 1px;
+height:1px;
+padding: 0;
+overflow: hidden;
+clip: rect(0, 0, 0, 0);
+white-space: nowrap;
+border: 0;
+}
+/* No major changes here */
+.dropdown-container {
+  position: fixed;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+
+}
+
+/* Custom dropdown structure */
+.dropdown {
+  position: relative;
+  font-family: 'Gemini', sans-serif;
+  font-size: 28px;
+  width: 200px;
+}
+
+/* Button for opening dropdown */
+.dropdown-button {
+  font-family: 'Gemini', sans-serif;
+  font-size: 32px;
+  padding: 12px 30px;
+  background-color: #12121200; /* Transparent background */
+  color: #121212; /* Text color */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  transition: all 0.3s ease;
+  font-variation-settings: "ital" 1; /* Default font style (normal) */
+  transition: font-variation-settings 0.3s ease; /* Smooth transition for font variation */
+}
+
+/* Hover effect for the dropdown button */
+.dropdown-button:hover {
+  color: #1212127e;
+  font-variation-settings: "ital" 400; 
+}
+
+/* Custom dropdown arrow */
+.arrow {
+  margin-left: 5px;
+  transition: transform 0.3s ease;
+}
+
+.dropdown.open .arrow {
+  transform: rotate(180deg); /* Flip the arrow when dropdown is open */
+}
+
+/* The dropdown menu */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #121212;
+  color: #8174C8;
+  border: none;
+  border-radius: 0px;
+  width: 100%;
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+.dropdown.open .dropdown-menu {
+  display: block;
+  opacity: 1;
+  visibility: visible;
+}
+
+body.bg-dark .dropdown-menu {
+  background-color: #D9D9D9; /* Light background for dark sections */
+  color: #121212; /* Dark text color for visibility */
+}
+
+.dropdown-item {
+  padding: 12px 20px;
+  cursor: pointer;
+  color: #121212; /* Default dark text color */
+  background-color: transparent; /* Default transparent background */
+  text-align: left;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-size: 32px;
+  transition: all 0.3s ease;
+  font-variation-settings: "ital" 1; /* Default font style (normal) */
+  transition: font-variation-settings 0.3s ease; /* Smooth transition for font variation */
+}
+
+.dropdown-item:hover {
+
+  font-variation-settings: "ital" 400; 
+}
+
+/* Dropdown items when on dark background */
+body.bg-dark .dropdown-item {
+  color: #121212; /* Dark text */
+  background-color: #D9D9D9; /* White background */
+
+}
+
+
+section {
+  padding: 100px 60px;
+  min-height: 100vh;
+  box-sizing: border-box;
+  margin-top: 80px;
+  scroll-snap-align: start;
+}
+
+
+.home-icon {
+width: 200px;
+height: auto;
+}
+
+  .home-link {
+   text-decoration: none;
+   color: inherit;
+  }
+
+.home-link:hover .home-icon {
+opacity: 0.8;
+}
+
+  .main-header {
+    display: flex;
+    align-items: center;
+    padding: 15px 40px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;  /* Keeps the header on top */
+    background-color: transparent;
+    gap: 80px;
+    box-shadow: none; /* Optional, removes any shadow */
+  }
+
+.nav-menu {
+display: flex;
+gap: 100px;
+}
+
+.nav-menu a {
+font-size: 32px;
+color: inherit;
+text-decoration: none;
+font-variation-settings: "ital" 1;
+transition:
+  font-variation-settings 0.3s ease-in-out;
+}
+
+
+
+.spaced-nav {
+margin-left: auto;
+margin-right: 5%;
+}
+
+.nav-menu a:hover {
+opacity: 0.7;
+font-variation-settings: "ital" 400; 
+}
+
+
+
+  
+  .slider-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 50px;
+    width: auto;
+  }
+
+  .hero-section {
+    height: 100vh;
+    width: 100%;
+    background-color: #9372c5;  /* Hero section background color */
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 120px;  /* Ensure it starts below the header */
+    box-sizing: border-box;
+    overflow: hidden;
+    margin-top: 0px;  
+    position: relative;
+  }
+  .text-wrapper {
+    position: relative;
+    width: 100%;
+    height: 90vh;
+    max-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+.text-input {
+  width: 90%;
+  min-height: 200px;
+  text-align: center;
+  color: #121212;
+  line-height: 1.2;
+  font-size: 600px; /* BIG start */
+  overflow-wrap: break-word;
+  word-break: break-word;
+  white-space: pre-wrap;
+  outline: none;
+  background: transparent;
+  z-index: 2;
+  font-variation-settings 0.4s ease,
+  text-shadow 0.3s ease-in-out,
+  color 0.4s ease,
+  background-color 0.4s ease;
+
+}
+
+.text-input.empty::before {
+  content: attr(data-placeholder);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--placeholder-color, #121212); /* Default purple */
+  font-size:190px;
+  line-height: 190px;
+  text-align: center;
+  white-space: pre-wrap;
+  pointer-events: none;
+  z-index: 1;
+}
+  
+  
+  
+  .text-input:focus {
+    outline: none;
+  }
+  
+  
+  .slider-box {
+    text-align: left;
+    width: 400px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+  }
+
+  .slider-box label {
+    font-size: 30px;
+    color: #000000;
+    margin-right: 10px;
+  }
+
+  .slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    background: #000000;
+    border-radius: 5px;
+    outline: none;
+    transition: background 0.3s ease-in-out;
+  }
+
+  .slider:hover {
+    background: #b54235;
+  }
+
+  :root {
+    --thumb-color: #000000; /* default black */
+  }
+  
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--thumb-color);
+    cursor: url('icons/cursor2.png');
+    transition: background 0.4s ease-in-out;
+  }
+  
+  /* Firefox */
+  .slider::-moz-range-thumb {
+    background: var(--thumb-color);
+    transition: background 0.4s ease-in-out;
+  }
+  
+
+
+  .randomization-button {
+font-family: 'Gemini',sans-serif;
+bottom: 40px;
+right: 40px;
+z-index: 100;
+cursor: pointer;
+font-size: 20px;
+padding: 10px 20px;
+border: none;
+border-radius: 30px;
+background-color: #121212; /* 👈 default dark */
+color: #8174C8; /* 👈 default lilac */
+transition: all 0.3s ease-in-out;
+
+}
+
+/* Quiet Mode (light background) */
+body.quiet-mode .randomization-button {
+background-color: #121212;
+color: #c3c3c3;
+}
+
+.dark-bg {
+  background-color: #121212;
+  color: #fff; /* Light text on dark background */
+}
+
+.light-bg {
+  background-color: #f9f9f9;
+  color: #121212; /* Dark text on light background */
+}
+
+/* Optionally, you can also adjust any specific hover or active states for the links */
+body.bg-dark .nav-menu a:hover {
+  color: #F30600; /* Optional: Change link hover color */
+}
+/* Optional hover states */
+.randomization-button:hover {
+opacity: 0.8;
+}
+
+
+/* Flex container for the icon and the quiet mode toggle */
+.icon-container {
+    display: flex;
+    align-items: center; /* Vertically center the items */
+    justify-content: flex-start; /* Align items to the start (left) */
+    gap: 20px; /* Adjust gap between the icon and the quiet mode button */
+  
+    bottom: 40px; /* Position from the bottom of the screen */
+    left: 40px; /* Position from the left of the screen */
+}
+
+/* Quiet mode button */
+.quiet-mode-button {
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Icon button */
+.icon-btn {
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Hover effect for the icon and quiet mode button */
+.icon-btn:hover, .quiet-mode-button:hover {
+    transform: scale(1.2);
+}
+
+
+.quiet-mode-button:hover {
+transform: scale(1.2);
+}
+body.quiet-mode {
+background-color: #D9D9D9 !important;
+color: #121212 !important;
+}
+
+body.quiet-mode .nav-menu a,
+body.quiet-mode label,
+body.quiet-mode h1,
+body.quiet-mode .text-input {
+color: #121212 !important;
+}
+
+body.quiet-mode .quiet-mode-button {
+border-color: #121212 !important;
+color: #121212 !important;
+}
+
+body.quiet-mode .slider::-webkit-slider-thumb {
+background: #121212 !important;
+}
+
+body.quiet-mode .slider::-moz-range-thumb {
+background: #121212 !important;
+}
+
+
+  #screensaver {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: black;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  #screensaver video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+
+.radius-hover-section {
+    background: #121212;
+    padding: 100px 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 90vh;
+    text-align:center;
+    overflow: hidden; /* ✨ prevent horizontal scroll */
+  }
+  
+  .radius-word-wrapper {
+    max-width: 95vw; /* ✅ responsive width */
+    margin: 120px auto 0 auto; /* 👈 pushes it down from the top */
+    padding: 0px 60px;        
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .radius-word {
+    display: block;
+    color: #D9D9D9;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    font-size: clamp(24px, 6vw, 105px);
+    max-width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    white-space: normal;
+    overflow-wrap: break-word; /* ✅ break long words */
+    word-break: break-word;
+    line-height: 1.0;
+    cursor:default;
+  }
+  
+.word {
+    display: inline;
+    white-space: normal;
+  }
+  
+.char {
+font-variation-settings: "ital" 1;
+transition: font-variation-settings 0.6s ease;
+display: inline-block;
+white-space: pre;
+color 0.3s ease;
+color: #D9D9D9
+transition:
+font-variation-settings 0.4s ease,
+color 0.3s ease;
+  
+}
+
+.mini-type-tester-section {
+  width: 100vw;
+  height: 100vh;
+  background-color: #121212;
+  color: #d9d9d9;
+  display: flex;
+  padding-top: 60px;
+  justify-content: flex-start;
+  padding: 10px;
+  padding-top: 200px;
+  box-sizing: border-box;
+  flex-direction: column;
+  align-items: center;
+}
+
+.type-tester {
+  max-width: 1400px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.tester-preview {
+    font-family: 'Gemini', sans-serif;
+    font-size: clamp(24px, 8vw, 140px);
+    font-variation-settings: 'ital' 1;
+    letter-spacing: 0em;
+    line-height: 1.5;
+    color: #fff;
+    text-align: left;
+    word-break: break-word;
+    outline: none;
+    min-height: 60vh; /* adjust based on how much space you want */
+    padding: 20px 0px;
+    position: relative;
+}
+.mini-type-tester-section input[type="range"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 150px; /* adjust as needed */
+  height: 8px;
+  background: #444;
+  border-radius: 4px;
+  outline: none;
+  transition: background 0.3s ease;
+}
+
+.mini-type-tester-section input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #d9d9d9; /* Red thumb */
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.mini-type-tester-section input[type="range"]::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #872e2d;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.mini-type-tester-section input[type="range"]:hover {
+  background: #666;
+}
+
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  font-size: 30px;
+}
+
+.controls-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+.control-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 40px;
+}
+
+.reset-button {
+  font-size: 20px;
+  padding: 6px 16px;
+  background-color: transparent;
+  color: #d9d9d9;
+border: none;
+  cursor: pointer;
+  height: fit-content;
+  white-space: nowrap;
+  align-self: flex-start;
+}
+
+
+.reset-button:hover {
+  color: #b6b6b6;
+  transform: scale(1.1);
+}
+
+.controls label {
+  display:block;
+  flex-direction:row;
+  color: #ccc;
+  gap: 5px;
+  align-items: baseline;
+}
+.color-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  color: #ccc;
+  font-size: 30px;
+  cursor: pointer;
+  align-items: baseline;
+  position: relative;
+}
+
+.custom-color-display {
+  background-color: #ffffff00;
+  color: #878787;
+  border: none;
+  padding: 0px 1px;
+  font-family: monospace;
+  font-size: 30px;
+  cursor: pointer;
+  position: relative;
+  line-height:1.3;
+}
+
+.custom-color-display input[type="color"] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+
+.preview-container {
+  flex-grow: 1;
+  max-height: none;
+  min-height: 60vh;
+  height: auto;
+  display: flex;
+  align-items: center;
+}
+
+.tester-preview {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  resize: none;
+  white-space: pre;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-y: hidden; 
+}
+
+.controls input[type="range"], .controls input[type="color"] {
+  width: 170px;
+}
+
+.controls,
+.control-group,
+.controls label,
+.color-wrapper,
+.custom-color-display {
+  font-size: 25px; /* 👈 Change to whatever size you want */
+}
+.tester-preview.empty::before {
+  content: attr(data-placeholder);
+  color: #d9d9d9;
+  position: absolute;
+  pointer-events: none;
+  font-size: inherit;
+  font-family: inherit;
+}
+
+
+.glyph-section {
+    display: flex;
+    max-height: 100vh;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 150px;
+    padding: 150px 60px 100px 60px;
+    background-color: #121212;
+    max-width: none;
+    margin: 0 auto;
+    color: #D9D9D9;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.big-letter {
+    font-size: 35vw; /* Adjusted size */
+    font-variation-settings: "ital" 1;
+    line-height: 1;
+    flex: 0 0 40%;
+    text-align: center;
+    white-space: nowrap;
+    min-height: 1em;
+    transition: all 0.3s ease; 
+    transition: font-variation-settings 0.4s ease;
+}
+
+.grid-container {
+    flex: 1;
+    min-width: 350px;
+    max-width: 550px; /* Make the container wider to allow for more space */
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+
+.letter-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 equal columns */
+    grid-template-rows: auto; /* Ensure that rows are created automatically based on content */
+    column-gap: 10px; /* Adjust the horizontal gap between columns */
+    row-gap: 10px; /* Adjust the vertical gap between rows */
+    justify-items: center;
+    font-size: clamp(24px, 4vw, 52px);
+}
+.letter-cell {
+  font-variation-settings: "ital" 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease; /* Smooth transition for all properties */
+  color: #D9D9D9; /* Default color for text */
+}
+
+.letter-cell:hover {
+  transform: scale(1.5);  /* Scale up the letter cell when hovered */
+}
+
+.letter-cell.active {
+  color: #F30600; /* Keep color red when active */
+}
+
+
+/* Ensure the icon's container is displayed and positioned correctly */
+.icon-glyph-container {
+  position: absolute ;
+  left: 35px;
+  bottom: 30px;
+  display: flex ;
+  justify-content: center 
+  align-items: center 
+}
+
+/* Apply width, height, and hover effect to the icon */
+.icon-glyph-toggle-font {
+  width: 35px;
+  height: 35px;
+  cursor: pointer ;
+  transition: transform 0.3s ease ;
+}
+
+.icon-glyph-toggle-font:hover {
+  transform: scale(1.1) ;
+}
+
+
+
+
+
+    
+  
+    
+  
+  
+  
+  
+  

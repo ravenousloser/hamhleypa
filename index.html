@@ -1,0 +1,1068 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HAMHLEYPA</title>
+  <link rel="icon" href="icons/agothic_black.png" type="image/x-icon" />
+  <link rel="stylesheet" href="index.css" />
+  <style>
+    body, .hero-section {
+      background-color: #8174C8;
+      transition: background-color 0.6s ease;
+    }
+  </style>
+</head>
+<body>
+  <header class="main-header">
+    <a href="index.html" class="home-link">
+      <img id="logoImg" src="icons/hamhleypa_logo_black_2.png" alt="Home" class="home-icon" />
+      <span class="visually-hidden">hamhleypa</span>
+    </a>
+    <div class="dropdown-container">
+      <div class="dropdown" id="dropdown">
+        <button class="dropdown-button">
+          Select Section
+          <span class="arrow">&#9660;</span>
+        </button>
+        <div class="dropdown-menu">
+          <div class="dropdown-item" data-section="hero-section">heim</div>
+          <div class="dropdown-item" data-section="radius-hover-section">letursýni</div>
+          <div class="dropdown-item" data-section="mini-type-tester">text input</div>
+        </div>
+      </div>
+    </div>
+    <nav class="nav-menu spaced-nav">
+      <a href="#" class="lang-switch">en</a>
+    </nav>
+  </header>
+
+  <main id="snapContainer" class="snap-container">
+  <section id="hero-section" class="hero-section">
+    <div class="text-wrapper">
+      <div id="textInput" class="text-input empty" contenteditable="true" spellcheck="false" data-placeholder="hver ert þú í dag?"></div>
+    </div>
+
+    <div class="bottomControls">
+      <div class="icon-container">
+        <img id="toggleButton" class="icon-btn" src="icons/agothic_black.png" alt="Toggle Italic" />
+        <img id="quietModeBtn" class="quiet-mode-button" src="icons/quiettoggle_bw.png" alt="toggleQuietMode">
+      </div>
+    
+      <div class="slider-container">
+        <div class="slider-box">
+          <label for="italicSlider">hamskipti</label>
+          <input type="range" id="italicSlider" class="slider" min="0" max="400" value="0" step="1">
+        </div>
+      </div>
+    
+      <div class="button-wrapper">
+        <button id="randomizeButton" class="randomization-button">hamleikur</button>
+      </div>    
+      </div>
+    </section>
+
+  <section id="radius-hover-section" class="radius-hover-section dark-bg">
+    <div class="radius-word-wrapper">
+      <div id="radiusWord" class="radius-word"></div>
+    </div>
+  </section>
+
+  <section id="glyph-section" class="glyph-section dark-bg">
+    <div class="big-letter" id="bigLetter">a</div>
+    <div class="grid-container">
+      <div class="letter-grid" id="letterGrid"></div>
+    </div>
+    <div class="icon-glyph-container">
+      <img src="icons/agothic_white.png" alt="Toggle Font Weight" class="icon-glyph-toggle-font" />
+    </div>
+  </section>
+
+  <audio id="sliderAudio" src="video/Mass in Gregorian Chant  1 Hour of Sacred Choir Music and Hymns.mp3" preload="auto"></audio>
+  <audio id="hamleikurSound" src="video/churchbells.mp3" preload="auto"></audio>
+</div> 
+
+  <!-- ✅ Fixed mini-type-tester section -->
+  <section id="mini-type-tester" class="mini-type-tester-section dark-bg">
+    <div class="type-tester">
+      <div class="controls-row">
+        <div class="control-group">
+          <label>hamur
+            <input type="range" id="ital" min="1" max="400" step="1" value="1">
+          </label>
+          <label>stafabil
+            <input type="range" id="tracking" min="-0.1" max="0.5" step="0.01" value="0">
+          </label>
+          <label>línubil
+            <input type="range" id="leading" min="0.2" max="2.5" step="0.1" value="1.5">
+          </label>
+          <div class="color-wrapper">
+            <span class="color-label">litur</span>
+            <div class="custom-color-display" id="colorSwatch">
+              #ffffff
+              <input type="color" id="color" value="#ffffff" />
+            </div>
+          </div>
+        </div>
+        <button id="resetButton" class="reset-button">endurstilla</button>
+      </div>
+      <div class="preview-container">
+        <div class="tester-preview empty" id="textPreview" contenteditable="true" spellcheck="false" data-placeholder="man is not truly one but truly two."></div>
+      </div>
+    </div>
+  </section>
+  </main>
+
+
+  <div id="screensaver">
+    <video id="screensaverVideo" autoplay loop muted>
+      <source src="video/hamhleypa_ani_9_copy.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+  
+  
+  <script>
+    
+    const textWrapper = document.querySelector('.text-wrapper'); // NEW!
+    const randomizeButton = document.getElementById("randomizeButton");
+    const toggleButton = document.getElementById("toggleButton");
+    const sliderAudio = document.getElementById("sliderAudio");
+    const quietModeBtn = document.getElementById("quietModeBtn");
+    const langSwitch = document.querySelector(".lang-switch");
+    const sliderLabel = document.querySelector(".slider-box label");
+    const navLinks = document.querySelectorAll(".nav-menu a");
+    const logoImg = document.getElementById("logoImg");
+    
+    const textInput = document.getElementById('textInput');
+
+function updatePlaceholder() {
+  if (textInput.innerText.trim() === "") {
+    textInput.classList.add('empty');
+  } else {
+    textInput.classList.remove('empty');
+  }
+}
+function applyFontVariationToAllChildren(ital) {
+  const allSpans = textInput.querySelectorAll('*');
+  allSpans.forEach(el => {
+    if (el.nodeType === 1) {
+      el.style.fontVariationSettings = `"ital" ${ital}`;
+    }
+  });
+}
+
+
+
+function fitTextSize() {
+  let fontSize = 600; // Start BIG (600px)
+  const minFontSize = 40;
+  const wrapperHeight = textInput.parentElement.clientHeight;
+
+  textInput.style.fontSize = fontSize + "px";
+
+  while (textInput.scrollHeight > wrapperHeight && fontSize > minFontSize) {
+    fontSize -= 5;
+    textInput.style.fontSize = fontSize + "px";
+  }
+}
+textInput.addEventListener('focus', () => {
+  if (textInput.classList.contains('empty')) {
+    
+    textInput.innerHTML = '&nbsp;'; // Clear it immediately
+    textInput.classList.remove('empty');
+    updateFont(); // <--- ADD THIS
+
+    fitTextSize();
+  }
+});
+
+
+textInput.addEventListener('input', () => {
+  updatePlaceholder();
+  fitTextSize();
+  
+});
+
+textInput.addEventListener('blur', () => {
+  updatePlaceholder();
+});
+
+window.addEventListener('load', () => {
+  
+  updatePlaceholder();
+  fitTextSize();
+  
+});
+
+    let isItalic = false;
+    let wasRandomized = false;
+
+    let pendingItal = null;
+let animationFrameRequest = null;
+
+function smoothUpdateFont() {
+  if (pendingItal === null) return;
+
+  const ital = pendingItal;
+  textInput.style.fontVariationSettings = `"ital" ${ital}`;
+
+  // Update the background, color, glow, etc.
+  updateFont(); // (Your existing updateFont logic)
+
+  pendingItal = null;
+  animationFrameRequest = null;
+}
+
+    
+    const italicSlider = document.getElementById("italicSlider");
+
+// Set the step size to 2 for smoother transitions
+italicSlider.setAttribute("step", "1");
+
+italicSlider.addEventListener("input", () => {
+
+  const ital = parseInt(italicSlider.value, 10);
+  textInput.style.fontVariationSettings = `"ital" ${ital}`;
+  applyFontVariationToAllChildren(ital); // 🔥 force override of randomized spans
+  updateFont();
+});
+
+
+function fadeAudioVolume(audioElement, targetVolume, duration = 300) {
+  const startVolume = audioElement.volume;
+  const startTime = performance.now();
+
+  function step(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    audioElement.volume = startVolume + (targetVolume - startVolume) * progress;
+
+    if (progress < 1) {
+      requestAnimationFrame(step);
+    }
+  }
+
+  requestAnimationFrame(step);
+}
+
+let lastSliderAudioTime = 0;
+let lastItalValue = 0;
+function updateFont() {
+  const ital = parseInt(italicSlider.value, 10);
+  const now = Date.now();
+  const isPastMid = ital > 200;
+  const isQuiet = document.body.classList.contains('quiet-mode');
+  const shouldUsePastMidEffects = isPastMid && !isQuiet;
+  
+  const heroSection = document.querySelector('.hero-section');
+  if (isQuiet) {
+  sliderAudio.pause();
+  sliderAudio.currentTime = 0;
+  sliderAudio.volume = 0;
+  hamleikurSound.volume = 0;
+} else {
+  if (ital <= 200) {
+    sliderAudio.volume = 0; // Mute but keep playing
+    if (sliderAudio.paused) {
+      sliderAudio.play();
+    }
+  } else {
+    sliderAudio.volume = 1; // Full volume
+    if (sliderAudio.paused) {
+      sliderAudio.play();
+    }
+  }
+}
+
+  lastItalValue = ital;
+
+  // (rest of your updateFont function — background, text colors etc)
+
+
+  // Background color
+  if (isQuiet) {
+    heroSection.style.backgroundColor = "#d9d9d9";
+  } else {
+    heroSection.style.backgroundColor = isPastMid ? "#121212" : "#8174C8";
+  }
+
+  // Colors
+  let sliderBg, thumbColor, randomizeButtonColor, randomizeButtonBg, textColor, accentColor;
+
+  if (isQuiet) {
+    sliderBg = "#121212";
+    thumbColor = "#121212";
+    randomizeButtonColor = "#d9d9d9";
+    randomizeButtonBg = "#121212";
+    textColor = "#121212";
+    accentColor = "#121212";
+  } else if (shouldUsePastMidEffects) {
+    sliderBg = "#F30600";
+    thumbColor = "#F30600";
+    randomizeButtonColor = "#121212";
+    randomizeButtonBg = "#F30600";
+    textColor = "#8174C8";
+    accentColor = "#F30600";
+  } else {
+    sliderBg = "#382C6A";
+    thumbColor = "#121212";
+    randomizeButtonColor = "#8174C8";
+    randomizeButtonBg = "#121212";
+    textColor = "#121212";
+    accentColor = "#121212";
+  }
+
+  document.documentElement.style.setProperty('--thumb-color', thumbColor);
+  italicSlider.style.background = sliderBg;
+  randomizeButton.style.color = randomizeButtonColor;
+
+  randomizeButton.style.backgroundColor = randomizeButtonBg;
+  textInput.style.color = textColor;
+  sliderLabel.style.color = accentColor;
+  //navLinks.forEach(link => link.style.color = accentColor);
+
+if (textInput.classList.contains('empty')) {
+  if (isQuiet) {
+    document.documentElement.style.setProperty('--placeholder-color', '#121212');
+  } else if (ital >= 200) {
+    document.documentElement.style.setProperty('--placeholder-color', '#8174C8');
+  } else {
+    document.documentElement.style.setProperty('--placeholder-color', '#121212');
+  }
+}
+
+
+  // Remove glow immediately if below 400
+  if (ital < 350 || document.body.classList.contains('quiet-mode')) {
+  textInput.classList.remove("glow");
+  textInput.style.textShadow = "none";
+  clearTimeout(textInput._glowTimeout);
+} else if (ital === 400) {
+  clearTimeout(textInput._glowTimeout);
+  textInput._glowTimeout = setTimeout(() => {
+    if (!document.body.classList.contains('quiet-mode')) {
+      textInput.classList.add("glow");
+      textInput.style.textShadow = `0 0 8px rgba(129, 116, 200, 0.3),
+                                    0 0 12px rgba(129, 116, 200, 0.3),
+                                    0 0 20px rgba(129, 116, 200, 0.4),
+                                    0 0 30px rgba(129, 116, 200, 0.2)`;
+    }
+  }, 0);
+}
+
+
+// ✅ Make sure this runs for every ital value
+updateHeaderAndIcons(ital);
+updateDropdownTitle(); // 👈 keeps title in sync with ital-related jumps
+
+
+}
+
+function updateIconsBasedOnState() {
+  if (document.body.classList.contains('quiet-mode')) {
+    return; // 🔕 Don’t change icons if in quiet mode
+  }
+
+  const ital = parseInt(italicSlider.value, 10);
+  const isSliderMax = ital === 400;
+
+  const newToggleIcon = isSliderMax ? "icons/aregular_red.png" : "icons/agothic_black.png";
+  const newQuietIcon = isSliderMax ? "icons/quiettoggle_red.png" : "icons/quiettoggle_bw.png";
+
+  if (toggleButton.getAttribute("src") !== newToggleIcon) {
+    toggleButton.src = newToggleIcon;
+  }
+
+  if (quietModeBtn.getAttribute("src") !== newQuietIcon) {
+    quietModeBtn.src = newQuietIcon;
+  }
+}
+
+updateIconsBasedOnState();
+
+
+function playHamleikurSoundThrottled() {
+  if (document.body.classList.contains('quiet-mode')) return; // 🚫 if quiet, exit early
+
+  const audio = document.getElementById("hamleikurSound");
+  if (!audio) return;
+
+  const now = Date.now();
+  if (!playHamleikurSoundThrottled.lastPlay || now - playHamleikurSoundThrottled.lastPlay > 1000) {
+    const newAudio = audio.cloneNode(true);
+    newAudio.volume = 1;
+    newAudio.play();
+    playHamleikurSoundThrottled.lastPlay = now;
+  }
+}
+
+
+
+randomizeButton.addEventListener("click", () => {
+  playHamleikurSoundThrottled();
+
+  const rawText = textInput.innerText.trim();
+  if (!rawText) return;
+
+  textInput.innerHTML = '';
+  wasRandomized = true;
+
+  const words = rawText.split(/\s+/); // handle multiple spaces/tabs cleanly
+  words.forEach((word, index) => {
+    const wordSpan = document.createElement("span");
+    wordSpan.style.display = "inline-block";
+    wordSpan.style.whiteSpace = "nowrap"; // prevent word break
+
+    const segmenter = new Intl.Segmenter(undefined, { granularity: "grapheme" });
+const graphemes = Array.from(segmenter.segment(word));
+
+for (const { segment } of graphemes) {
+  const charSpan = document.createElement("span");
+  charSpan.textContent = segment;
+  const ital = Math.random() < 0.5 ? 1 : 400;
+  charSpan.style.fontVariationSettings = `"ital" ${ital}`;
+  charSpan.style.display = "inline-block";
+  wordSpan.appendChild(charSpan);
+}
+
+
+    textInput.appendChild(wordSpan);
+
+    if (index < words.length - 1) {
+      const space = document.createTextNode(" "); // Normal space this time
+      textInput.appendChild(space);
+    }
+  });
+
+  textInput.style.fontVariationSettings = "unset";
+});
+italicSlider.addEventListener("input", () => {
+  const ital = parseInt(italicSlider.value, 10);
+  pendingItal = ital;
+
+  if (!animationFrameRequest) {
+    animationFrameRequest = requestAnimationFrame(smoothUpdateFont);
+  }
+
+  updateTextColorOnScroll(); // 👈 this is enough!
+});
+
+
+function updateHeaderAndIcons(ital) {
+  if (document.body.classList.contains('quiet-mode')) return;
+
+  const header = document.querySelector('.main-header');
+  const navLinks = document.querySelectorAll('.nav-menu a');
+  const langSwitch = document.querySelector('.lang-switch');
+  const dropdownButton = document.querySelector('.dropdown-button');
+  const dropdownItems = document.querySelectorAll('.dropdown-item');
+
+  if (ital >= 200) {
+    header.style.color = '#F30600';
+    navLinks.forEach(link => link.style.color = '#F30600');
+    langSwitch.style.color = '#F30600';
+    logoImg.src = "icons/hamhleypa_logo_red.png";
+    dropdownButton.style.color = '#F30600';
+    dropdownItems.forEach(item => {
+      item.style.color = '#121212';
+      item.style.backgroundColor = '#F30600';
+    });
+  } else {
+    header.style.color = '#121212';
+    navLinks.forEach(link => link.style.color = '#121212');
+    langSwitch.style.color = '#121212';
+    logoImg.src = "icons/hamhleypa_logo_black.png";
+    dropdownButton.style.color = '#121212';
+    dropdownItems.forEach(item => {
+      item.style.color = '#8174C8';
+      item.style.backgroundColor = 'transparent';
+    });
+  }
+
+  toggleButton.src = ital >= 200 ? "icons/agothic_red.png" : "icons/agothic_black.png";
+  quietModeBtn.src = ital >= 200 ? "icons/quiettoggle_red.png" : "icons/quiettoggle_bw.png";
+
+}
+
+
+    function toggleQuietMode() {
+  document.body.classList.toggle("quiet-mode");
+  updateFont();
+  updateIconsBasedOnState();  // ✅ add this after updateFont()
+
+  const ital = parseInt(italicSlider.value, 10);
+  if (!document.body.classList.contains('quiet-mode') && ital >= 200 && ital <= 400) {
+    sliderAudio.currentTime = 0;
+    sliderAudio.play();
+  }
+}
+
+quietModeBtn.addEventListener("click", toggleQuietMode);
+
+
+let inactivityTimeout;
+
+function startInactivityWatcher() {
+  const screensaver = document.getElementById("screensaver");
+  const screensaverVideo = document.getElementById("screensaverVideo");
+
+  function activateScreensaver() {
+    screensaver.style.display = "flex";
+    screensaverVideo.play();
+
+    // 👇 listen ONCE, then reload on any interaction
+    function handleWake() {
+      location.reload();
+    }
+
+    document.addEventListener("mousemove", handleWake, { once: true });
+    document.addEventListener("keydown", handleWake, { once: true });
+    document.addEventListener("touchstart", handleWake, { once: true });
+  }
+
+  function resetTimer() {
+    clearTimeout(inactivityTimeout);
+    screensaver.style.display = "none";
+    inactivityTimeout = setTimeout(activateScreensaver, 30000);
+  }
+
+  ["mousemove", "keydown", "touchstart"].forEach(event =>
+    document.addEventListener(event, resetTimer)
+  );
+
+  resetTimer(); // start the timer immediately
+}
+
+startInactivityWatcher();
+
+    
+    const translations = {
+      is: {
+        hamleikur: "hamleikur",
+        sliderLabel: "hamskipti",
+        placeholder: "hver ert þú í dag?",
+        nav: ["en"]
+      },
+      en: {
+        hamleikur: "random",
+        sliderLabel: "shapeshift",
+        placeholder: "who are you today?",
+        nav: ["ísl"]
+      }
+    };
+    
+    let currentLang = "is";
+   function applyLanguage(lang) {
+  const t = translations[lang];
+  randomizeButton.textContent = t.hamleikur;
+  sliderLabel.textContent = t.sliderLabel;
+  textInput.setAttribute("data-placeholder", t.placeholder);
+
+  // Only update existing stuff
+  if (textInput.innerText.trim() === "" || 
+      textInput.innerText.trim() === translations["is"].placeholder || 
+      textInput.innerText.trim() === translations["en"].placeholder) {
+    textInput.innerText = "";
+  }
+
+  langSwitch.textContent = t.nav[0]; // Only switch the langSwitch button text
+}
+
+    
+    window.addEventListener("load", () => {
+      const savedLang = localStorage.getItem("language") || "is";
+      currentLang = savedLang;
+      applyLanguage(currentLang);
+    });
+    
+    langSwitch.addEventListener("click", (e) => {
+      e.preventDefault();
+      currentLang = currentLang === "is" ? "en" : "is";
+      localStorage.setItem("language", currentLang);
+      applyLanguage(currentLang);
+    });
+    
+    function switchImageInstant(imgElement, newSrc) {
+  imgElement.src = newSrc;
+}
+
+
+
+// 👇 Radius hover effect
+const radiusWord = document.getElementById("radiusWord");
+const sentence = "even as good shone upon the countenance of the one, evil was written broadly and plainly on the face of the other.";
+
+function buildSentence(text) {
+  const words = text.split(" ");
+  words.forEach((word, i) => {
+    const wordSpan = document.createElement("span");
+    wordSpan.classList.add("word");
+    wordSpan.style.display = "inline-block";
+    wordSpan.style.whiteSpace = "nowrap";
+
+    for (let char of word) {
+      const charSpan = document.createElement("span");
+      charSpan.classList.add("char");
+      charSpan.textContent = char;
+      wordSpan.appendChild(charSpan);
+    }
+
+    radiusWord.appendChild(wordSpan);
+    if (i !== words.length - 1) {
+      const space = document.createTextNode("\u00A0");
+      radiusWord.appendChild(space);
+    }
+  });
+}
+
+function activateHoverEffect(radius = 120) {
+  const chars = radiusWord.querySelectorAll(".char");
+
+  radiusWord.addEventListener("mousemove", (e) => {
+    const mouseX = e.clientX;
+    const mouseY = e.clientY;
+
+    chars.forEach((char) => {
+      const rect = char.getBoundingClientRect();
+      const charX = rect.left + rect.width / 2;
+      const charY = rect.top + rect.height / 2;
+
+      const dist = Math.sqrt((mouseX - charX) ** 2 + (mouseY - charY) ** 2);
+      char.style.fontVariationSettings = dist < radius ? "'ital' 400" : "'ital' 1";
+    });
+  });
+}
+
+
+  const bigLetter = document.getElementById("bigLetter");
+  const letterGrid = document.getElementById("letterGrid");
+
+  const letters = [..."aábcðeéfghiíjklmnoópqrsstuúvwxyýzþæö,.!"];
+
+  function updateBigLetter(char) {
+    bigLetter.textContent = char;
+  }
+
+  function renderLetterGrid() {
+  letterGrid.innerHTML = ""; // Clear previous grid
+
+  letters.forEach(char => {
+    const cell = document.createElement("div");
+    cell.className = "letter-cell";
+    cell.textContent = char;
+
+    // ✅ Make "a" active by default
+    if (char === "a") {
+      cell.classList.add("active");
+    }
+
+    // Click listener to update big letter and active state
+    cell.addEventListener("click", () => {
+      updateBigLetter(char);
+      document.querySelectorAll(".letter-cell").forEach(c => c.classList.remove("active"));
+      cell.classList.add("active");
+    });
+
+    letterGrid.appendChild(cell);
+  });
+
+  // ✅ Set bigLetter to "a" as default
+  updateBigLetter("a");
+}
+
+
+
+  window.addEventListener("load", () => {
+    renderLetterGrid();
+  });
+
+  document.addEventListener('DOMContentLoaded', function () {
+  const dropdownButton = document.querySelector('.dropdown-button');
+  const dropdown = document.querySelector('.dropdown');
+  const dropdownMenu = document.querySelector('.dropdown-menu');
+
+  const sections = document.querySelectorAll('section'); // All sections on the page
+  const sectionTitles = {
+  'hero-section': 'heim',
+  'radius-hover-section': 'letursýni',
+  
+};
+
+
+  // Toggle the dropdown visibility on click
+  dropdownButton.addEventListener('click', function () {
+    dropdown.classList.toggle('open');
+  });
+
+  // Add event listeners to dropdown items to scroll to sections
+  document.querySelectorAll('.dropdown-item').forEach(item => {
+    item.addEventListener('click', function () {
+      const sectionId = this.getAttribute('data-section');
+      const section = document.getElementById(sectionId);
+      section.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+
+      // Close the dropdown after an item is selected
+      dropdown.classList.remove('open');
+    });
+  });
+ // Add the event listener outside of the toggleFontWeight function
+// Select the button and the elements we want to update
+const iconGlyphToggleFont = document.querySelector('.icon-glyph-toggle-font');
+const bigLetter = document.getElementById('bigLetter');
+const letterGrid = document.getElementById('letterGrid');
+
+// Add the event listener for the button click
+iconGlyphToggleFont.addEventListener('click', function() {
+  console.log("Button clicked!");  // Check if the button is being clicked
+  toggleFontWeight();  // Call the function to toggle font weight and switch the icon
+});
+
+// The function to toggle the font weight and switch the icon image
+function toggleFontWeight() {
+  const current = bigLetter.style.fontVariationSettings.includes('"ital" 400') ? 400 : 1;
+  const newItal = current === 400 ? 1 : 400;
+
+  bigLetter.style.fontVariationSettings = `"ital" ${newItal}`;
+  letterGrid.querySelectorAll('.letter-cell').forEach(cell => {
+    cell.style.fontVariationSettings = `"ital" ${newItal}`;
+  });
+
+  iconGlyphToggleFont.src = newItal === 400 
+    ? 'icons/aregular_white.png' 
+    : 'icons/agothic_white.png';
+}
+
+  // Function to update the dropdown button text based on the current section
+  function updateDropdownTitle() {
+  const scrollY = snapContainer.scrollTop;
+  const containerHeight = snapContainer.clientHeight;
+  const middle = scrollY + containerHeight / 2;
+
+  let currentSectionId = null;
+
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop;
+    const sectionBottom = sectionTop + section.offsetHeight;
+
+    if (middle >= sectionTop && middle < sectionBottom) {
+      currentSectionId = section.id;
+    }
+  });
+
+  if (currentSectionId && sectionTitles[currentSectionId]) {
+    dropdownButton.innerHTML = `${sectionTitles[currentSectionId]} <span class="arrow">&#9660;</span>`;
+  }
+}
+
+
+  // Listen for scroll events to update the title dynamically
+  snapContainer.addEventListener('scroll', updateDropdownTitle);
+
+  window.addEventListener('load', updateDropdownTitle);
+  // Also run it on page load in case the page loads with a section already in view
+  updateDropdownTitle();
+});
+function updateTextColorOnScroll() {
+  const snapContainer = document.getElementById('snapContainer');
+  const scrollY = snapContainer.scrollTop;
+  const viewportHeight = snapContainer.clientHeight;
+
+  const header = document.querySelector('.main-header');
+  const navLinks = document.querySelectorAll('.nav-menu a');
+  const langSwitch = document.querySelector('.lang-switch');
+  const logoImg = document.getElementById('logoImg');
+  const dropdownButton = document.querySelector('.dropdown-button');
+  const dropdownItems = document.querySelectorAll('.dropdown-item');
+  const sections = document.querySelectorAll('section');
+
+  const isQuiet = document.body.classList.contains('quiet-mode');
+  const ital = parseInt(italicSlider.value, 10);
+
+
+    let currentSection = null;
+sections.forEach(section => {
+  const top = section.offsetTop;
+  const height = section.offsetHeight;
+  const scrollMiddle = scrollY + viewportHeight / 2;
+
+  // Only activate if scrollMiddle is at least 40% into the section
+  if (scrollMiddle >= top + height * 0.4 && scrollMiddle <= top + height) {
+    currentSection = section;
+  }
+});
+
+  if (!currentSection) return;
+
+  const isDark = currentSection.classList.contains('dark-bg');
+
+  // Section-specific styles
+  if (isDark) {
+    header.style.color = '#fff';
+    navLinks.forEach(link => link.style.color = '#fff');
+    langSwitch.style.color = '#fff';
+    logoImg.src = "icons/hamhleypa_logo_white.png";
+    dropdownButton.style.color = '#fff';
+    dropdownItems.forEach(item => {
+      item.style.color = '#121212';
+      item.style.backgroundColor = '#fff';
+    });
+    document.body.classList.add('bg-dark');
+  } else {
+    header.style.color = '#121212';
+    navLinks.forEach(link => link.style.color = '#121212');
+    langSwitch.style.color = '#121212';
+    logoImg.src = "icons/hamhleypa_logo_black.png";
+    dropdownButton.style.color = '#121212';
+    dropdownItems.forEach(item => {
+      item.style.color = '#8174C8';
+      item.style.backgroundColor = 'transparent';
+    });
+    document.body.classList.remove('bg-dark');
+  }
+
+  // Overwrite with red if ital is 200–400 and not in quiet mode
+  if (!isQuiet && ital >= 200 && ital <= 400) {
+    header.style.color = '#F30600';
+    navLinks.forEach(link => link.style.color = '#F30600');
+    langSwitch.style.color = '#F30600';
+    logoImg.src = "icons/hamhleypa_logo_red.png";
+    dropdownButton.style.color = '#F30600';
+    dropdownItems.forEach(item => {
+      item.style.color = '#121212';
+      item.style.backgroundColor = '#F30600';
+    });
+  }
+}
+
+const preview = document.getElementById('textPreview');
+const italInput = document.getElementById('ital');
+const trackingInput = document.getElementById('tracking');
+const leadingInput = document.getElementById('leading');
+const colorInput = document.getElementById('color');
+
+function updatePreview() {
+  preview.style.fontVariationSettings = `'ital' ${italInput.value}`;
+  preview.style.letterSpacing = `${trackingInput.value}em`;
+  preview.style.lineHeight = leadingInput.value;
+  preview.style.color = colorInput.value;
+}
+
+[italInput, trackingInput, leadingInput, colorInput].forEach(input => {
+  input.addEventListener('input', updatePreview);
+});
+preview.addEventListener('input', () => {
+  updatePreview();
+  fitTypePreview();
+});
+function fitTypePreview() {
+  const el = document.getElementById("textPreview");
+  const container = el.parentElement;
+
+  const maxHeight = container.clientHeight;
+  const maxWidth = container.clientWidth;
+
+  // Clone the element off-screen for accurate measurement
+  const clone = el.cloneNode(true);
+  clone.style.position = 'absolute';
+  clone.style.visibility = 'hidden';
+  clone.style.whiteSpace = 'pre';
+  clone.style.height = 'auto';
+  clone.style.width = 'auto';
+  clone.style.padding = getComputedStyle(el).padding;
+  clone.style.lineHeight = getComputedStyle(el).lineHeight;
+  clone.style.letterSpacing = getComputedStyle(el).letterSpacing;
+  clone.style.fontFamily = getComputedStyle(el).fontFamily;
+  clone.style.fontVariationSettings = getComputedStyle(el).fontVariationSettings;
+
+  document.body.appendChild(clone);
+
+  let fontSize = 400;
+
+  while (fontSize > 24) {
+    clone.style.fontSize = fontSize + 'px';
+    if (clone.scrollWidth > maxWidth || clone.scrollHeight > maxHeight) {
+      fontSize -= 2;
+    } else {
+      break;
+    }
+  }
+
+  el.style.fontSize = fontSize + 'px';
+  document.body.removeChild(clone);
+}
+
+
+function updatePlaceholderState() {
+  if (preview.textContent.trim() === "") {
+    preview.classList.add("empty");
+  } else {
+    preview.classList.remove("empty");
+  }
+}
+
+// Clear placeholder on first focus
+preview.addEventListener("focus", () => {
+  if (preview.classList.contains("empty")) {
+    preview.textContent = "";
+    preview.classList.remove("empty");
+  }
+});
+
+// Re-check on input/blur
+preview.addEventListener("input", () => {
+  updatePreview();
+  updatePlaceholderState();
+  fitTypePreview();
+});
+
+preview.addEventListener("blur", updatePlaceholderState);
+
+// Initial state on load
+window.addEventListener("DOMContentLoaded", updatePlaceholderState);
+
+window.addEventListener("resize", fitTypePreview);
+document.getElementById("resetButton").addEventListener("click", () => {
+  // Reset sliders and color
+  italInput.value = 1;
+  trackingInput.value = 0;
+  leadingInput.value = 1.5;
+  colorInput.value = "#ffffff";
+
+  // Reset preview text
+  preview.textContent = "";
+  preview.classList.add("empty");
+
+  // Update styles
+  updatePreview();
+  fitTypePreview();
+});
+
+
+updatePreview();
+fitTypePreview();
+
+
+
+// Call it initially to set the correct color when the page loads
+updateTextColorOnScroll();
+updateIconsBasedOnState(); // ✅
+
+const snapContainer = document.getElementById('snapContainer');
+snapContainer.addEventListener('scroll', updateTextColorOnScroll);
+
+buildSentence(sentence);
+activateHoverEffect();
+
+// 🟢 Initial setup AFTER everything is loaded
+window.addEventListener("load", () => {
+  fitTextToContainer();
+  updateFont();
+});
+
+function fitTextToContainer() {
+  const textInput = document.getElementById("textInput");
+  if (!textInput) return;
+
+  let fontSize = 160; // Big starting font size in pixels
+  const minFontSize = 40; // Minimum allowed font size
+  const textWrapper = document.querySelector('.text-wrapper'); // The parent container
+  const maxHeight = textWrapper.clientHeight * 0.8; // 80% of textWrapper height
+
+  textInput.style.fontSize = fontSize + "px"; // Set font size in pixels
+
+  // Now adjust while too tall
+  while (textInput.scrollHeight > maxHeight && fontSize > minFontSize) {
+    fontSize -= 2; // Decrease font size slowly
+    textInput.style.fontSize = fontSize + "px";
+  }
+}
+
+toggleButton.addEventListener("click", () => {
+  const current = parseInt(italicSlider.value, 10);
+  const newItal = current <= 1 ? 400 : 1;
+
+
+  console.log("Toggled to ital:", newItal);
+
+  italicSlider.value = newItal;
+italicSlider.dispatchEvent(new Event('input')); // 🔥 triggers all the logic already written
+
+  updateFont();
+  updateTextColorOnScroll();
+
+
+  applyFontVariationToAllChildren(newItal);
+  // 🔍 DEBUG: Check span ital values after toggle
+const spans = textInput.querySelectorAll('span');
+spans.forEach(span => {
+  console.log(`[${span.textContent.trim()}] has ital:`, span.style.fontVariationSettings);
+});
+
+});
+
+
+
+
+
+function forceLowercase(element) {
+  element.addEventListener('input', () => {
+    const selection = window.getSelection();
+    const range = selection.getRangeAt(0);
+    const caretOffset = range.startOffset;
+
+    // Preserve current text, but convert just affected node's text to lowercase
+    const original = element.innerText;
+    const lower = original.toLowerCase();
+
+    if (original !== lower) {
+      element.textContent = lower;
+
+      // Restore caret position
+      const textNode = element.firstChild;
+      if (textNode) {
+        const offset = Math.min(caretOffset, textNode.length);
+        const newRange = document.createRange();
+        newRange.setStart(textNode, offset);
+        newRange.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(newRange);
+      }
+    }
+
+    // Update layout and placeholder
+    if (element.id === 'textInput') {
+      updatePlaceholder();
+      fitTextSize();
+    } else if (element.id === 'textPreview') {
+      updatePlaceholderState();
+      fitTypePreview();
+    }
+  });
+}
+
+
+
+// Apply to both fields
+forceLowercase(document.getElementById('textInput'));
+forceLowercase(document.getElementById('textPreview'));
+
+['textInput', 'textPreview'].forEach(id => {
+  const el = document.getElementById(id);
+  el.addEventListener('paste', (e) => {
+    e.preventDefault();
+    const text = (e.clipboardData || window.clipboardData).getData('text');
+    const lower = text.toLowerCase();
+    document.execCommand('insertText', false, lower);
+  });
+});
+
+
+
+    </script>
+  
+    
+</body>
+</html>
