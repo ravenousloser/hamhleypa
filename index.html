@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -14,20 +15,31 @@
 </head>
 <body>
   <header class="main-header">
-    <a href="index.html" class="home-link">
-      <img id="logoImg" src="icons/hamhleypa_logo_black_2.png" alt="Home" class="home-icon" />
-      <span class="visually-hidden">hamhleypa</span>
-    </a>
+    <a href="index.html" class="home-link logo-text">hamhleypa</a>
+  
+    <!-- Hamburger menu button (visible on mobile) -->
+    <button class="hamburger" aria-label="Menu">☰</button>
+  
+    <!-- Mobile menu (toggle visibility with JS) -->
+    <nav class="mobile-menu">
+      <a href="#hero-section">heim</a>
+      <a href="#about-hover-section">um hamhleypu</a>
+      <a href="#glyph-section">letursýni</a>
+      <a href="#" class="lang-switch">en</a>
+    </nav>
+  
+    <!-- Dropdown menu (for desktop) -->
     <div class="dropdown-container">
       <div class="dropdown" id="dropdown">
         <button class="dropdown-button">
-          Select Section
-          <span class="arrow">&#9660;</span>
+          <span class="dropdown-title">Menu Item</span>
+          <span class="arrow">▼</span>
         </button>
         <div class="dropdown-menu">
           <div class="dropdown-item" data-section="hero-section">heim</div>
-          <div class="dropdown-item" data-section="radius-hover-section">letursýni</div>
-          <div class="dropdown-item" data-section="mini-type-tester">text input</div>
+          <div class="dropdown-item" data-section="about-hover-section">um hamhleypu</div>
+          <div class="dropdown-item" data-section="glyph-section">letursýni</div>
+    
         </div>
       </div>
     </div>
@@ -56,16 +68,17 @@
       </div>
     
       <div class="button-wrapper">
-        <button id="randomizeButton" class="randomization-button">hamleikur</button>
+        <button id="randomizeButton" class="randomization-button hidden">hamleikur</button>
       </div>    
       </div>
     </section>
 
-  <section id="radius-hover-section" class="radius-hover-section dark-bg">
-    <div class="radius-word-wrapper">
-      <div id="radiusWord" class="radius-word"></div>
-    </div>
-  </section>
+    <section id="about-hover-section" class="about-hover-section dark-bg">
+      <div class="about-word-wrapper">
+        <div id="aboutWord" class="about-word"></div>
+      </div>
+    </section>
+    
 
   <section id="glyph-section" class="glyph-section dark-bg">
     <div class="big-letter" id="bigLetter">a</div>
@@ -77,26 +90,37 @@
     </div>
   </section>
 
-  <audio id="sliderAudio" src="video/Mass-in-Gregorian-Chant-1-Hour-o.mp3" preload="auto"></audio>
+  <audio id="sliderAudio" src="video/gregor.mp3" preload="auto"></audio>
   <audio id="hamleikurSound" src="video/churchbells.mp3" preload="auto"></audio>
-</div> 
+  <div id="screensaver">
+    <video id="screensaverVideo" autoplay loop muted>
+      <source src="video/hamhleypa_video.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    </div>
+
+<section id="radius-hover-section" class="radius-hover-section dark-bg">
+  <div class="radius-word-wrapper">
+    <div id="radiusWord" class="radius-word"></div>
+  </div>
+</section>
 
   <!-- ✅ Fixed mini-type-tester section -->
   <section id="mini-type-tester" class="mini-type-tester-section dark-bg">
     <div class="type-tester">
       <div class="controls-row">
         <div class="control-group">
-          <label>hamur
+          <label id="label-ital">hamur
             <input type="range" id="ital" min="1" max="400" step="1" value="1">
           </label>
-          <label>stafabil
+          <label id="label-tracking">stafabil
             <input type="range" id="tracking" min="-0.1" max="0.5" step="0.01" value="0">
           </label>
-          <label>línubil
+          <label id="label-leading">línubil
             <input type="range" id="leading" min="0.2" max="2.5" step="0.1" value="1.5">
           </label>
           <div class="color-wrapper">
-            <span class="color-label">litur</span>
+            <span class="color-label" id="label-color">litur</span>
             <div class="custom-color-display" id="colorSwatch">
               #ffffff
               <input type="color" id="color" value="#ffffff" />
@@ -113,12 +137,7 @@
   </main>
 
 
-  <div id="screensaver">
-    <video id="screensaverVideo" autoplay loop muted>
-      <source src="video/hamhleypa_ani_9_copy.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-  </div>
+
   
   
   <script>
@@ -129,11 +148,21 @@
     const sliderAudio = document.getElementById("sliderAudio");
     const quietModeBtn = document.getElementById("quietModeBtn");
     const langSwitch = document.querySelector(".lang-switch");
+    langSwitch.addEventListener("click", (e) => {
+  e.preventDefault();
+  const newLang = currentLang === "is" ? "en" : "is";
+  applyLanguage(newLang);
+});
+
     const sliderLabel = document.querySelector(".slider-box label");
     const navLinks = document.querySelectorAll(".nav-menu a");
-    const logoImg = document.getElementById("logoImg");
-    
+
     const textInput = document.getElementById('textInput');
+    const sections = document.querySelectorAll('section');
+    const dropdownButton = document.querySelector('.dropdown-button');
+
+
+
 
 function updatePlaceholder() {
   if (textInput.innerText.trim() === "") {
@@ -141,7 +170,11 @@ function updatePlaceholder() {
   } else {
     textInput.classList.remove('empty');
   }
+  const isEmpty = textInput.innerText.trim() === "";
+  textInput.classList.toggle('empty', isEmpty);
+  randomizeButton.classList.toggle('hidden', isEmpty); // 👈 hide/show button
 }
+
 function applyFontVariationToAllChildren(ital) {
   const allSpans = textInput.querySelectorAll('*');
   allSpans.forEach(el => {
@@ -180,19 +213,27 @@ textInput.addEventListener('focus', () => {
 textInput.addEventListener('input', () => {
   updatePlaceholder();
   fitTextSize();
-  
+
+  const hasText = textInput.innerText.trim().length > 0;
+  randomizeButton.classList.toggle('hidden', !hasText);
 });
 
 textInput.addEventListener('blur', () => {
   updatePlaceholder();
+  if (textInput.innerText.trim() === "") {
+    randomizeButton.classList.add('hidden');
+  }
 });
 
+
 window.addEventListener('load', () => {
-  
   updatePlaceholder();
   fitTextSize();
-  
+  if (textInput.innerText.trim() === "") {
+    randomizeButton.classList.add('hidden');
+  }
 });
+
 
     let isItalic = false;
     let wasRandomized = false;
@@ -245,8 +286,39 @@ function fadeAudioVolume(audioElement, targetVolume, duration = 300) {
   requestAnimationFrame(step);
 }
 
+function updateDropdownTitle() {
+  const scrollY = snapContainer.scrollTop;  // ✅ not window.scrollY
+  const containerHeight = snapContainer.clientHeight;
+  const middle = scrollY + containerHeight / 2;
+
+  currentSectionId = null; // reset before scanning
+  
+  const sectionAliasMap = {
+  'glyph-section': 'glyph-section',
+  'radius-hover-section': 'glyph-section',
+  'mini-type-tester': 'glyph-section',
+};
+
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop;
+    const sectionBottom = sectionTop + section.offsetHeight;
+
+    if (middle >= sectionTop && middle < sectionBottom) {
+      const aliasId = sectionAliasMap[section.id] || section.id;
+currentSectionId = aliasId;
+
+    }
+  });
+
+  if (currentSectionId) {
+    const translatedTitle = getTranslatedSectionTitle(currentSectionId, currentLang);
+    dropdownButton.innerHTML = `${translatedTitle} <span class="arrow">&#9660;</span>`;
+  }
+}
+
 let lastSliderAudioTime = 0;
 let lastItalValue = 0;
+
 function updateFont() {
   const ital = parseInt(italicSlider.value, 10);
   const now = Date.now();
@@ -349,14 +421,61 @@ if (textInput.classList.contains('empty')) {
     }
   }, 0);
 }
+if (textInput.classList.contains('empty')) {
+  document.documentElement.style.setProperty('--placeholder-ital', `"ital" ${ital}"`);
+}
 
 
 // ✅ Make sure this runs for every ital value
 updateHeaderAndIcons(ital);
-updateDropdownTitle(); // 👈 keeps title in sync with ital-related jumps
-
-
 }
+
+
+    function buildAboutSentence(text) {
+  const aboutWord = document.getElementById("aboutWord");
+  const words = text.split(" ");
+  words.forEach((word, i) => {
+    const wordSpan = document.createElement("span");
+    wordSpan.classList.add("word");
+    wordSpan.style.display = "inline-block";
+    wordSpan.style.whiteSpace = "nowrap";
+
+    for (let char of word) {
+      const charSpan = document.createElement("span");
+      charSpan.classList.add("char");
+      charSpan.textContent = char;
+      wordSpan.appendChild(charSpan);
+    }
+
+    aboutWord.appendChild(wordSpan);
+    if (i !== words.length - 1) {
+      const space = document.createTextNode("\u00A0");
+      aboutWord.appendChild(space);
+    }
+  });
+}
+
+function activateAboutHover(radius = 150) {
+  const chars = document.querySelectorAll("#aboutWord .char");
+  const container = document.getElementById("aboutWord");
+
+  container.addEventListener("mousemove", (e) => {
+    const mouseX = e.clientX;
+    const mouseY = e.clientY;
+
+    chars.forEach((char) => {
+      const rect = char.getBoundingClientRect();
+      const charX = rect.left + rect.width / 2;
+      const charY = rect.top + rect.height / 2;
+
+      const dist = Math.sqrt((mouseX - charX) ** 2 + (mouseY - charY) ** 2);
+      char.style.fontVariationSettings = dist < radius ? "'ital' 400" : "'ital' 1";
+    });
+  });
+}
+buildAboutSentence(`hamhleypa er breytilegt letur sem tekur á sig tvær mismunandi myndir. það hefur í raun tvo persónuleika. sá fyrri er geómetrískt steinletur, sem er lítið í sér og heldur kunnuglegt. hinn sækir innblástur úr gotneskum stíl frá miðöldum evrópu, nánar tiltekið í oddboga og mynstur sem finnast í gluggaflúrum (tracery) gotneskra kirkna. hemhleypa er „uniwidth“, sem þýðir að stafir letursins taka ávallt jafn mikið pláss í hvorum ham, og á öllum skrefum þar á milli. það gerir hamhleypu sérstaklega nothæfa í stafrænu umhverfi.`);
+activateAboutHover(150);
+
 
 function updateIconsBasedOnState() {
   if (document.body.classList.contains('quiet-mode')) {
@@ -400,6 +519,12 @@ function playHamleikurSoundThrottled() {
 
 randomizeButton.addEventListener("click", () => {
   playHamleikurSoundThrottled();
+
+  if (textInput.classList.contains('empty')) {
+  const placeholderItal = Math.random() < 0.5 ? 1 : 400;
+  document.documentElement.style.setProperty('--placeholder-ital', `"ital" ${placeholderItal}`);
+}
+
 
   const rawText = textInput.innerText.trim();
   if (!rawText) return;
@@ -447,41 +572,63 @@ italicSlider.addEventListener("input", () => {
   updateTextColorOnScroll(); // 👈 this is enough!
 });
 
-
 function updateHeaderAndIcons(ital) {
-  if (document.body.classList.contains('quiet-mode')) return;
+  const isQuiet = document.body.classList.contains('quiet-mode');
 
   const header = document.querySelector('.main-header');
   const navLinks = document.querySelectorAll('.nav-menu a');
   const langSwitch = document.querySelector('.lang-switch');
+  const logo = document.querySelector('.logo-text');
   const dropdownButton = document.querySelector('.dropdown-button');
   const dropdownItems = document.querySelectorAll('.dropdown-item');
+  const iconGlyph = document.querySelector('.icon-glyph-toggle-font');
 
+  if (isQuiet) {
+    // 🔇 Quiet Mode: everything black or grayscale
+    header.style.color = '#121212';
+    logo.style.color = '#121212';
+    langSwitch.style.color = '#121212';
+    dropdownButton.style.color = '#121212';
+    navLinks.forEach(link => link.style.color = '#121212');
+    dropdownItems.forEach(item => {
+      item.style.color = '#d9d9d9';
+      item.style.backgroundColor = '#121212';
+    });
+
+    toggleButton.src = 'icons/agothic_black.png';
+    quietModeBtn.src = 'icons/quiettoggle_bw.png';
+    if (iconGlyph) iconGlyph.src = 'icons/agothic_white.png'; // or black depending on section
+    return;
+  }
+
+  // 🎨 Not in quiet mode — handle red/black states based on ital
   if (ital >= 200) {
     header.style.color = '#F30600';
-    navLinks.forEach(link => link.style.color = '#F30600');
+    logo.style.color = '#F30600';
     langSwitch.style.color = '#F30600';
-    logoImg.src = "icons/hamhleypa_logo_red.png";
     dropdownButton.style.color = '#F30600';
+    navLinks.forEach(link => link.style.color = '#F30600');
     dropdownItems.forEach(item => {
       item.style.color = '#121212';
       item.style.backgroundColor = '#F30600';
     });
+
+    toggleButton.src = 'icons/agothic_red.png';
+    quietModeBtn.src = 'icons/quiettoggle_red.png';
   } else {
     header.style.color = '#121212';
-    navLinks.forEach(link => link.style.color = '#121212');
+    logo.style.color = '#121212';
     langSwitch.style.color = '#121212';
-    logoImg.src = "icons/hamhleypa_logo_black.png";
     dropdownButton.style.color = '#121212';
+    navLinks.forEach(link => link.style.color = '#121212');
     dropdownItems.forEach(item => {
       item.style.color = '#8174C8';
       item.style.backgroundColor = 'transparent';
     });
+
+    toggleButton.src = 'icons/agothic_black.png';
+    quietModeBtn.src = 'icons/quiettoggle_bw.png';
   }
-
-  toggleButton.src = ital >= 200 ? "icons/agothic_red.png" : "icons/agothic_black.png";
-  quietModeBtn.src = ital >= 200 ? "icons/quiettoggle_red.png" : "icons/quiettoggle_bw.png";
-
 }
 
 
@@ -535,53 +682,132 @@ function startInactivityWatcher() {
 
 startInactivityWatcher();
 
-    
-    const translations = {
-      is: {
-        hamleikur: "hamleikur",
-        sliderLabel: "hamskipti",
-        placeholder: "hver ert þú í dag?",
-        nav: ["en"]
-      },
-      en: {
-        hamleikur: "random",
-        sliderLabel: "shapeshift",
-        placeholder: "who are you today?",
-        nav: ["ísl"]
-      }
-    };
-    
+const translations = {
+  is: {
+    hamleikur: "hamleikur",
+    sliderLabel: "hamskipti",
+    placeholder: "hver ert þú í dag?",
+
+    dropdown: {
+      "hero-section": "heim",
+      "about-hover-section": "um hamhleypu",
+      "glyph-section": "letursýni",
+      
+    },
+    about: `hamhleypa er breytilegt letur sem tekur á sig tvær mismunandi myndir. það hefur í raun tvo persónuleika. sá fyrri er geómetrískt steinletur, sem er lítið í sér og heldur kunnuglegt. hinn sækir innblástur úr gotneskum stíl frá miðöldum evrópu, nánar tiltekið í oddboga og mynstur sem finnast í gluggaflúrum (tracery) gotneskra kirkna. letrið er „uniwidth“, sem þýðir að stafir letursins taka ávallt jafn mikið lárétt pláss í hvorum ham, og á öllum skrefum þar á milli. það gerir letrið sérstaklega nothæft í stafrænu umhverfi. `,
+    nav: ["en"],
+    labels: {
+      ital: "hamur",
+      tracking: "stafabil",
+      leading: "línubil",
+      color: "litur",
+      reset: "endurstilla",
+    }
+  },
+  en: {
+    hamleikur: "randomize",
+    sliderLabel: "shapeshift",
+    placeholder: "who are you today?",
+    dropdown: {
+      "hero-section": "home",
+      "about-hover-section": "about",
+      "glyph-section": "type specimen",
+    },
+    about: `hamhleypa is a typeface that takes on two different forms. it actually has two different personalities. the first is a geometric sans-serif which is modest and rather familiar. the other draws inspiration from the gothic architecture of medieval europe, specifically the pointed arches and patterns found in the tracery of gothic churches. hamhleypa is “uniwidth”, which means that the letters of the typeface take up the same amount of space on either side of the axis. this makes hamhleypa ideal for the digital environment.`,
+    nav: ["ísl"],
+    labels: {
+      ital: "style",
+      tracking: "tracking",
+      leading: "leading",
+      color: "color",
+      reset: "reset",
+    }
+  }
+};
+
+
+
+let currentSectionId = null;
     let currentLang = "is";
-   function applyLanguage(lang) {
+    function getTranslatedSectionTitle(sectionId, lang) {
+  return translations[lang]?.dropdown?.[sectionId] || "Select Section";
+}
+function applyLanguage(lang) {
   const t = translations[lang];
+  currentLang = lang;
+
+  // ✅ Get current section in view manually (no need to call updateDropdownTitle)
+  const scrollY = snapContainer.scrollTop;
+  const containerHeight = snapContainer.clientHeight;
+  const middle = scrollY + containerHeight / 2;
+
+ 
+let visibleSectionId = null;
+document.querySelectorAll('section').forEach(section => {
+  const top = section.offsetTop;
+  const bottom = top + section.offsetHeight;
+  if (middle >= top && middle < bottom) {
+    visibleSectionId = section.id;
+  }
+});
+
+// ✅ Update the dropdown title based on visible section
+if (visibleSectionId) {
+  const translatedTitle = getTranslatedSectionTitle(visibleSectionId, lang);
+  dropdownButton.innerHTML = `${translatedTitle} <span class="arrow">&#9660;</span>`;
+}
+
+  // ✅ Proceed with rest of translation
   randomizeButton.textContent = t.hamleikur;
   sliderLabel.textContent = t.sliderLabel;
+  langSwitch.textContent = t.nav[0];
   textInput.setAttribute("data-placeholder", t.placeholder);
 
-  // Only update existing stuff
-  if (textInput.innerText.trim() === "" || 
-      textInput.innerText.trim() === translations["is"].placeholder || 
-      textInput.innerText.trim() === translations["en"].placeholder) {
+  if (
+    textInput.innerText.trim() === "" ||
+    textInput.innerText.trim() === translations["is"].placeholder ||
+    textInput.innerText.trim() === translations["en"].placeholder
+  ) {
     textInput.innerText = "";
   }
 
-  langSwitch.textContent = t.nav[0]; // Only switch the langSwitch button text
+  document.querySelectorAll(".dropdown-item").forEach(item => {
+    const sectionId = item.getAttribute("data-section");
+    if (t.dropdown[sectionId]) {
+      item.textContent = t.dropdown[sectionId];
+    }
+  });
+
+  const labelMap = {
+    "label-ital": t.labels.ital,
+    "label-tracking": t.labels.tracking,
+    "label-leading": t.labels.leading,
+    "label-color": t.labels.color,
+  };
+
+  for (const id in labelMap) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+    if (id === "label-color") {
+      el.textContent = labelMap[id];
+    } else {
+      el.childNodes[0].nodeValue = labelMap[id] + " ";
+    }
+  }
+  document.body.setAttribute("data-lang", lang);
+
+  document.getElementById("resetButton").textContent = t.labels.reset;
+
+  const aboutWord = document.getElementById("aboutWord");
+  aboutWord.innerHTML = "";
+  buildAboutSentence(t.about);
+  activateAboutHover(150);
+  
+  updateDropdownTitle();
+
 }
 
-    
-    window.addEventListener("load", () => {
-      const savedLang = localStorage.getItem("language") || "is";
-      currentLang = savedLang;
-      applyLanguage(currentLang);
-    });
-    
-    langSwitch.addEventListener("click", (e) => {
-      e.preventDefault();
-      currentLang = currentLang === "is" ? "en" : "is";
-      localStorage.setItem("language", currentLang);
-      applyLanguage(currentLang);
-    });
-    
+
     function switchImageInstant(imgElement, newSrc) {
   imgElement.src = newSrc;
 }
@@ -677,17 +903,27 @@ function activateHoverEffect(radius = 120) {
   });
 
   document.addEventListener('DOMContentLoaded', function () {
-  const dropdownButton = document.querySelector('.dropdown-button');
+
   const dropdown = document.querySelector('.dropdown');
   const dropdownMenu = document.querySelector('.dropdown-menu');
 
-  const sections = document.querySelectorAll('section'); // All sections on the page
+
   const sectionTitles = {
   'hero-section': 'heim',
-  'radius-hover-section': 'letursýni',
+  'about-hover-section': 'um hamhleypu',
+  'glyph-section': 'letursýni',
   
 };
 
+// Close dropdown if user clicks outside of it
+document.addEventListener('click', function (event) {
+  const dropdown = document.querySelector('.dropdown');
+  const isClickInside = dropdown.contains(event.target);
+
+  if (!isClickInside) {
+    dropdown.classList.remove('open');
+  }
+});
 
   // Toggle the dropdown visibility on click
   dropdownButton.addEventListener('click', function () {
@@ -735,27 +971,6 @@ function toggleFontWeight() {
     : 'icons/agothic_white.png';
 }
 
-  // Function to update the dropdown button text based on the current section
-  function updateDropdownTitle() {
-  const scrollY = snapContainer.scrollTop;
-  const containerHeight = snapContainer.clientHeight;
-  const middle = scrollY + containerHeight / 2;
-
-  let currentSectionId = null;
-
-  sections.forEach(section => {
-    const sectionTop = section.offsetTop;
-    const sectionBottom = sectionTop + section.offsetHeight;
-
-    if (middle >= sectionTop && middle < sectionBottom) {
-      currentSectionId = section.id;
-    }
-  });
-
-  if (currentSectionId && sectionTitles[currentSectionId]) {
-    dropdownButton.innerHTML = `${sectionTitles[currentSectionId]} <span class="arrow">&#9660;</span>`;
-  }
-}
 
 
   // Listen for scroll events to update the title dynamically
@@ -774,13 +989,13 @@ function updateTextColorOnScroll() {
   const navLinks = document.querySelectorAll('.nav-menu a');
   const langSwitch = document.querySelector('.lang-switch');
   const logoImg = document.getElementById('logoImg');
-  const dropdownButton = document.querySelector('.dropdown-button');
+
   const dropdownItems = document.querySelectorAll('.dropdown-item');
-  const sections = document.querySelectorAll('section');
+
 
   const isQuiet = document.body.classList.contains('quiet-mode');
   const ital = parseInt(italicSlider.value, 10);
-
+ 
 
     let currentSection = null;
 sections.forEach(section => {
@@ -800,21 +1015,21 @@ sections.forEach(section => {
 
   // Section-specific styles
   if (isDark) {
-    header.style.color = '#fff';
-    navLinks.forEach(link => link.style.color = '#fff');
-    langSwitch.style.color = '#fff';
-    logoImg.src = "icons/hamhleypa_logo_white.png";
-    dropdownButton.style.color = '#fff';
+    header.style.color = '#d9d9d9';
+    navLinks.forEach(link => link.style.color = '#d9d9d9');
+    langSwitch.style.color = '#d9d9d9';
+    document.querySelector('.logo-text').style.color = '#d9d9d9';
+    dropdownButton.style.color = '#d9d9d9';
     dropdownItems.forEach(item => {
       item.style.color = '#121212';
-      item.style.backgroundColor = '#fff';
+      item.style.backgroundColor = '#d9d9d9';
     });
     document.body.classList.add('bg-dark');
   } else {
     header.style.color = '#121212';
     navLinks.forEach(link => link.style.color = '#121212');
     langSwitch.style.color = '#121212';
-    logoImg.src = "icons/hamhleypa_logo_black.png";
+    document.querySelector('.logo-text').style.color = '#121212';
     dropdownButton.style.color = '#121212';
     dropdownItems.forEach(item => {
       item.style.color = '#8174C8';
@@ -828,7 +1043,7 @@ sections.forEach(section => {
     header.style.color = '#F30600';
     navLinks.forEach(link => link.style.color = '#F30600');
     langSwitch.style.color = '#F30600';
-    logoImg.src = "icons/hamhleypa_logo_red.png";
+    document.querySelector('.logo-text').style.color = '#F30600';
     dropdownButton.style.color = '#F30600';
     dropdownItems.forEach(item => {
       item.style.color = '#121212';
@@ -1057,6 +1272,16 @@ forceLowercase(document.getElementById('textPreview'));
     const lower = text.toLowerCase();
     document.execCommand('insertText', false, lower);
   });
+});
+document.addEventListener("DOMContentLoaded", function () {
+  const hamburger = document.querySelector('.hamburger');
+  const mobileMenu = document.querySelector('.mobile-menu');
+
+  if (hamburger && mobileMenu) {
+    hamburger.addEventListener('click', () => {
+      mobileMenu.classList.toggle('show');
+    });
+  }
 });
 
 
