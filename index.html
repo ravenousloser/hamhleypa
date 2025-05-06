@@ -147,12 +147,14 @@
     const toggleButton = document.getElementById("toggleButton");
     const sliderAudio = document.getElementById("sliderAudio");
     const quietModeBtn = document.getElementById("quietModeBtn");
-    const langSwitch = document.querySelector(".lang-switch");
-    langSwitch.addEventListener("click", (e) => {
-  e.preventDefault();
-  const newLang = currentLang === "is" ? "en" : "is";
-  applyLanguage(newLang);
+    document.querySelectorAll(".lang-switch").forEach((el) => {
+  el.addEventListener("click", (e) => {
+    e.preventDefault();
+    const newLang = currentLang === "is" ? "en" : "is";
+    applyLanguage(newLang);
+  });
 });
+
 
     const sliderLabel = document.querySelector(".slider-box label");
     const navLinks = document.querySelectorAll(".nav-menu a");
@@ -473,7 +475,7 @@ function activateAboutHover(radius = 150) {
     });
   });
 }
-buildAboutSentence(`hamhleypa er breytilegt letur sem tekur á sig tvær mismunandi myndir. það hefur í raun tvo persónuleika. sá fyrri er geómetrískt steinletur, sem er lítið í sér og heldur kunnuglegt. hinn sækir innblástur úr gotneskum stíl frá miðöldum evrópu, nánar tiltekið í oddboga og mynstur sem finnast í gluggaflúrum (tracery) gotneskra kirkna. hemhleypa er „uniwidth“, sem þýðir að stafir letursins taka ávallt jafn mikið pláss í hvorum ham, og á öllum skrefum þar á milli. það gerir hamhleypu sérstaklega nothæfa í stafrænu umhverfi.`);
+buildAboutSentence(`hamhleypa er breytilegt letur sem tekur á sig tvær mismunandi myndir. það hefur í raun tvo persónuleika. sá fyrri er geómetrískt steinletur, sem er lítið í sér og heldur kunnuglegt. hinn sækir innblástur úr gotneskum stíl frá miðöldum evrópu, nánar tiltekið í oddboga og mynstur sem finnast í gluggaflúrum (tracery) gotneskra kirkna. hamhleypa er „uniwidth“, sem þýðir að stafir letursins taka ávallt jafn mikið pláss í hvorum ham, og á öllum skrefum þar á milli. það gerir hamhleypu sérstaklega nothæfa í stafrænu umhverfi.`);
 activateAboutHover(150);
 
 
@@ -760,7 +762,10 @@ if (visibleSectionId) {
   // ✅ Proceed with rest of translation
   randomizeButton.textContent = t.hamleikur;
   sliderLabel.textContent = t.sliderLabel;
-  langSwitch.textContent = t.nav[0];
+  document.querySelectorAll(".lang-switch").forEach((el) => {
+  el.textContent = t.nav[0];
+});
+
   textInput.setAttribute("data-placeholder", t.placeholder);
 
   if (
@@ -863,7 +868,7 @@ function activateHoverEffect(radius = 120) {
   const bigLetter = document.getElementById("bigLetter");
   const letterGrid = document.getElementById("letterGrid");
 
-  const letters = [..."aábcðeéfghiíjklmnoópqrsstuúvwxyýzþæö,.!"];
+  const letters = [..."aábcdðeéfghiíjklmnoópqrsstuúvwxyýzþæö.,:;'!?-–—„“()"];
 
   function updateBigLetter(char) {
     bigLetter.textContent = char;

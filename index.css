@@ -471,7 +471,7 @@ color: #c3c3c3;
 
 .dark-bg {
   background-color: #121212;
-  color: #fff; /* Light text on dark background */
+  color: #d9d9d9; /* Light text on dark background */
 }
 
 .light-bg {
@@ -721,7 +721,7 @@ color 0.3s ease;
     font-variation-settings: 'ital' 1;
     letter-spacing: 0em;
     line-height: 1.5;
-    color: #fff;
+    color: #d9d9d9;
     text-align: left;
     word-break: break-word;
     outline: none;
@@ -933,10 +933,10 @@ color 0.3s ease;
 
 .letter-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr); /* 5 equal columns */
+    grid-template-columns: repeat(6, 1fr); /* 5 equal columns */
     grid-template-rows: auto; /* Ensure that rows are created automatically based on content */
     column-gap: 10px; /* Adjust the horizontal gap between columns */
-    row-gap: 10px; /* Adjust the vertical gap between rows */
+    row-gap: 8px; /* Adjust the vertical gap between rows */
     justify-items: center;
     font-size: clamp(24px, 4vw, 52px);
 }
@@ -989,8 +989,9 @@ color 0.3s ease;
   cursor: pointer;
   z-index: 1001;
 }
+
 .mobile-menu {
-  display: flex;
+  display: none;
   flex-direction: column;
   background-color: #121212;
   position: absolute;
@@ -1064,7 +1065,7 @@ color 0.3s ease;
   }
 
   .mobile-menu a {
-    color: #fff;
+    color: #d9d9d9;
     text-decoration: none;
     padding: 10px 0;
   }
@@ -1250,6 +1251,10 @@ margin-top: 0;
     max-height: 50vh;
     overflow-y: auto;
     padding: 10px 0; 
+  }
+
+  nav.mobile-menu a.lang-switch {
+    color: #d9d9d9;
   }
 
 }
