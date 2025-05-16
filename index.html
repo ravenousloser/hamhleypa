@@ -135,7 +135,11 @@
     </div>
   </section>
   </main>
-
+  
+  <div class="projection-wrapper">
+    <img src="icons/cutout7.png" class="projection-overlay" alt="mask" />
+  </div>
+  
 
 
   
@@ -1287,6 +1291,10 @@ document.addEventListener("DOMContentLoaded", function () {
       mobileMenu.classList.toggle('show');
     });
   }
+});
+
+window.addEventListener('scroll', () => {
+  console.log('Scrolled!', window.scrollY);
 });
 
 
