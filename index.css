@@ -937,7 +937,7 @@ color 0.3s ease;
     background-color: #121212;
     max-width: none;
   
-    margin-top: 500px;
+  
     color: #D9D9D9;
     width: 100%;
     box-sizing: border-box;
@@ -949,6 +949,7 @@ color 0.3s ease;
     font-variation-settings: "ital" 1;
     line-height: 1;
     flex: 0 0 40%;
+    margin-top: 100px;
     text-align: center;
     white-space: nowrap;
     min-height: 1em;
@@ -958,6 +959,7 @@ color 0.3s ease;
 
 .grid-container {
     flex: 1;
+    margin-top: 100px;
     min-width: 350px;
     max-width: 550px; /* Make the container wider to allow for more space */
     box-sizing: border-box;

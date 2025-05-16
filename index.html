@@ -1047,16 +1047,28 @@ sections.forEach(section => {
     document.body.classList.remove('bg-dark');
   }
 
-  // Overwrite with red if ital is 200–400 and not in quiet mode
-  if (!isQuiet && ital >= 200 && ital <= 400) {
-    header.style.color = '#F30600';
-    navLinks.forEach(link => link.style.color = '#F30600');
-    langSwitch.style.color = '#F30600';
-    document.querySelector('.logo-text').style.color = '#F30600';
-    dropdownButton.style.color = '#F30600';
-    dropdownItems.forEach(item => {
-      item.style.color = '#121212';
-      item.style.backgroundColor = '#F30600';
+  if (!isQuiet && ital >= 200 && ital <= 400 && currentSection.id === 'hero-section') {
+  // apply red styles
+  header.style.color = '#F30600';
+  navLinks.forEach(link => link.style.color = '#F30600');
+  langSwitch.style.color = '#F30600';
+  document.querySelector('.logo-text').style.color = '#F30600';
+  dropdownButton.style.color = '#F30600';
+  dropdownItems.forEach(item => {
+    item.style.color = '#121212';
+    item.style.backgroundColor = '#F30600';
+  });
+} else {
+  // revert to black styles when not in hero-section
+  header.style.color = '#121212';
+  navLinks.forEach(link => link.style.color = '#121212');
+  langSwitch.style.color = '#121212';
+  document.querySelector('.logo-text').style.color = '#121212';
+  dropdownButton.style.color = '#121212';
+  dropdownItems.forEach(item => {
+    item.style.color = '#8174C8'; // fallback/default
+    item.style.backgroundColor = 'transparent';
+  
     });
   }
 }
