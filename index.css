@@ -120,10 +120,12 @@ section + section {
 }
 
 
+
 .bottom-controls-section {
   scroll-snap-align: none;
   height: auto;
 }
+
 
 
   .visually-hidden {
