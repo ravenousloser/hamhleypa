@@ -14,12 +14,22 @@
     padding: 0;
     margin: 0;
     height: 100vh;
-    overflow-x: hidden;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     transition: background 2s ease-in-out, color 2s ease-in-out;
+    }
 
+    html, body {
+      height: 100vh;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    
+    
+    body::-webkit-scrollbar {
+      display: none;
     }
 
     html, body {
@@ -32,7 +42,7 @@
   }
   
     section:not(.hero-section) {
-      background-color: #121212;
+      background-color: #F30600
     }
 
     section {
@@ -44,6 +54,23 @@
     body.quiet-mode .hero-section {
       background-color: #d9d9d9 !important;
     }
+
+    .projection-wrapper {
+      position: fixed;
+      inset: 0;
+      z-index: 999999;
+      pointer-events: none;
+    }
+    
+    .projection-overlay {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    
+    
+    
     .glyph-section,
 .mini-type-tester-section,
 .about-hover-section,
@@ -79,20 +106,24 @@ section + section {
 
 
 .snap-container {
+  height: 100vh;
+  overflow-y: auto; /* <== enables scrolling */
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
-  overflow-y: scroll;       /* Correct scrolling behavior */
-  height: 100vh;
   display: flex;
   flex-direction: column;
-  scroll-snap-type: y mandatory;
+
+  scrollbar-width: none; /* Firefox */
 }
+.snap-container::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
 
 .bottom-controls-section {
   scroll-snap-align: none;
   height: auto;
 }
-
 
 
   .visually-hidden {
@@ -255,7 +286,7 @@ section {
   .main-header {
     display: flex;
     align-items: center;
-    padding: 15px 40px;
+    padding: 22px 40px;
     width: 100%;
     position: fixed;
     top: 0;
@@ -596,9 +627,9 @@ body.quiet-mode .dropdown-item:hover {
   }
   
   .about-word-wrapper {
-    max-width: 90vw;
+    max-width: 85vw;
     margin: 190px auto 0 auto;
-    padding-top: 110px;
+    padding-top: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -738,7 +769,7 @@ color 0.3s ease;
   -webkit-appearance: none;
   width: 150px; /* adjust as needed */
   height: 8px;
-  background: #444;
+  background: #121212;
   border-radius: 4px;
   outline: none;
   transition: background 0.3s ease;
@@ -759,13 +790,13 @@ color 0.3s ease;
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: #872e2d;
+  background: #121212;
   cursor: pointer;
   transition: background 0.3s ease;
 }
 
 .mini-type-tester-section input[type="range"]:hover {
-  background: #666;
+  background: #1212126d;
 }
 
 
@@ -805,14 +836,14 @@ color 0.3s ease;
 
 
 .reset-button:hover {
-  color: #b6b6b6;
+  color: #1212126d;
   transform: scale(1.1);
 }
 
 .controls label {
   display:block;
   flex-direction:row;
-  color: #ccc;
+  color: #121212;
   gap: 5px;
   align-items: baseline;
 }
@@ -829,7 +860,7 @@ color 0.3s ease;
 
 .custom-color-display {
   background-color: #ffffff00;
-  color: #878787;
+  color: #121212;
   border: none;
   padding: 0px 1px;
   font-family: monospace;
@@ -894,16 +925,17 @@ color 0.3s ease;
 
 .glyph-section {
     display: flex;
-    max-height: 1400px;
+    max-height: 1300px;
     flex-direction: row;
     align-items: flex-start;
     justify-content: center;
     flex-wrap: wrap;
     gap: 150px;
-    padding: 150px 60px 100px 60px;
+    padding: 210px 60px 100px 100px;
     background-color: #121212;
     max-width: none;
-    margin: 0 auto;
+  
+    margin-top: 500px;
     color: #D9D9D9;
     width: 100%;
     box-sizing: border-box;
@@ -955,7 +987,7 @@ color 0.3s ease;
 }
 
 .letter-cell.active {
-  color: #F30600; /* Keep color red when active */
+  color: #121212; /* Keep color red when active */
 }
 
 
